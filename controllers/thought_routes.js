@@ -60,6 +60,46 @@ router.delete('/:thoughtId', async (req, res) => {
     }
 })
 
+// ROUTES FOR REACTIONS
+router.post('/:thoughtId/reactions', async (req, res) => {
+    const thoughtId = req.params.thoughtId
+    const reactionData = req.body
+
+    try {
+        const thought = await Thought.findById(thoughtId)
+
+        thought.reactions.push(reactionData)
+
+        await thought.save()
+
+        res.json(thought)
+
+
+
+    } catch (error) {
+        console.log(error)
+    }
+})
+
+router.delete('/:thoughtId/reactions', async (req, res) => {
+    const thoughtId = req.params.thoughtId
+    const reactionId = req.body
+
+    try {
+        const thought = await Thought.findById(thoughtId)
+
+        const reactionArray = thought.reactions.indexOf(reactionId)
+
+        const removeReaction = thought.reactions.splice(reactionArray, 1)
+
+        await thought.save()
+
+        res.json(removeReaction)
+
+    } catch (error) {
+        console.log(error)
+    }
+})
 
 
 module.exports = router

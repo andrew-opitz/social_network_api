@@ -23,20 +23,21 @@ router.post('/', async (req, res) => {
 
     } catch (error) {
         console.log(error)
-        res.status(500).json({ error: error.message })
+
     }
-    
+
 })
 
 router.put('/:userId', async (req, res) => {
     const userId = req.params.userId
     const { username } = req.body
-    
+
     try {
-        
+
         const updatedUser = await User.findByIdAndUpdate(userId, { username }, { new: true })
 
         res.json(updatedUser)
+
     } catch (error) {
         console.error(error)
     }
@@ -59,7 +60,7 @@ router.delete('/:userId', async (req, res) => {
 router.post('/:userId/friends/:friendId', async (req, res) => {
     const userId = req.params.userId
     const friendId = req.params.friendId
-   
+
     try {
         const user = await User.findById(userId)
 
@@ -70,7 +71,7 @@ router.post('/:userId/friends/:friendId', async (req, res) => {
         res.json(user)
 
     } catch (error) {
-        
+
         console.log(error)
 
     }
@@ -82,6 +83,7 @@ router.delete('/:userId/friends/:friendId', async (req, res) => {
 
     try {
         const user = await User.findById(userId)
+
         const friendArray = user.friends.indexOf(friendId)
 
         const removeFriend = user.friends.splice(friendArray, 1)
