@@ -1,4 +1,4 @@
-const mongoose = require('/mongoose')
+const mongoose = require('mongoose')
 const { model, Schema } = require('mongoose')
 
 const userSchema = new Schema({
@@ -13,11 +13,13 @@ const userSchema = new Schema({
         required: true,
         unique: true,
         validate: {
-            validator: function (email) {
-                return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)
+            validator(val) {
+              return /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/gi.test(val);
             },
-            message: props => `${props.value} is not a valid email address!`
-        }
+            message() {
+              return 'You must enter a valid email address.'
+            }
+          }
     },
     thoughts: [
         {
@@ -31,10 +33,14 @@ const userSchema = new Schema({
             ref: 'User'
         }
     ],
-})
-
-userSchema.virtual('friendCount').get(function () {
-    return this.friends.length
+}, {
+    virtuals: {
+        friendCount: {
+            get() {
+                return this.friends.length
+            }
+        }
+    }
 })
 
 const User = model('User', userSchema)
